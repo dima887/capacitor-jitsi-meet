@@ -32,6 +32,18 @@ export class JitsiWeb extends WebPlugin implements JitsiPlugin {
   async leaveConference(options?: {}): Promise<{ success?: boolean; }> {
       throw this.unavailable('the web implementation is not available. Please use Jitsi Meet API to implement Jitsi in web app');
   };
+
+    async enterPictureInPictureMode(): Promise<any> {
+        throw this.unimplemented('the web implementation is not available. Please use Jitsi Meet API to implement Jitsi in web app');
+    }
+
+    async hideConference(): Promise<any> {
+        throw this.unimplemented('the web implementation is not available. Please use Jitsi Meet API to implement Jitsi in web app');
+    }
+
+    async showConference(): Promise<any> {
+        throw this.unimplemented('the web implementation is not available. Please use Jitsi Meet API to implement Jitsi in web app');
+    }
 }
 
 const Jitsi = new JitsiWeb();
