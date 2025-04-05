@@ -1,13 +1,17 @@
 package com.capacitor.jitsi.plugin;
 
 import android.app.Activity;
+import android.app.PictureInPictureParams;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Build;
+import android.util.Rational;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import timber.log.Timber;
 
@@ -47,6 +51,7 @@ public class JitsiActivity extends JitsiMeetActivity {
 
     private void registerForBroadcastMessages() {
         IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("enterPiPMode");
 
         for (BroadcastEvent.Type type : BroadcastEvent.Type.values()) {
             intentFilter.addAction(type.getAction());
@@ -59,6 +64,17 @@ public class JitsiActivity extends JitsiMeetActivity {
         JitsiMeetView view = getJitsiView();
         if (intent != null) {
             BroadcastEvent event = new BroadcastEvent(intent);
+            // ✅ Переход в PiP при кастомном намерении
+            if ("enterPiPMode".equals(intent.getAction())) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Rational aspectRatio = new Rational(16, 9);
+                    PictureInPictureParams params = new PictureInPictureParams.Builder()
+                            .setAspectRatio(aspectRatio)
+                            .build();
+                    enterPictureInPictureMode(params);
+                }
+                return;
+            }
             switch (event.getType()) {
                 case CONFERENCE_JOINED:
                     on("onConferenceJoined", null);
@@ -81,6 +97,9 @@ public class JitsiActivity extends JitsiMeetActivity {
                     break;
                 case PARTICIPANTS_INFO_RETRIEVED:
                     on("onParticipantsInfoRetrieved", event);
+                    break;
+                case CUSTOM_OVERFLOW_MENU_BUTTON_PRESSED:
+                    on("onCustomButtonPressed", event);
                     break;
             }
         }
@@ -153,4 +172,18 @@ public class JitsiActivity extends JitsiMeetActivity {
     }
 
     private static final String ADD_PEOPLE_CONTROLLER_QUERY = null;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void enterPiP() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Rational aspectRatio = new Rational(16, 9);
+            PictureInPictureParams params = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                params = new PictureInPictureParams.Builder()
+                    .setAspectRatio(aspectRatio)
+                    .build();
+            }
+            enterPictureInPictureMode(params);
+        }
+    }
 }

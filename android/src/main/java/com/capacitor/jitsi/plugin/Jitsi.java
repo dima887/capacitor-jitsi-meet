@@ -4,6 +4,13 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.*;
 
+import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import android.app.Activity;
+import android.os.Bundle;
+
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -55,6 +62,7 @@ public class Jitsi extends Plugin {
         Boolean startWithVideoMuted = call.getBoolean("startWithVideoMuted");
         JSObject featureFlags = call.getObject("featureFlags", new JSObject());
         JSObject configOverrides = call.getObject("configOverrides", new JSObject());
+
         receiver = new JitsiBroadcastReceiver();
         receiver.setModule(this);
         IntentFilter filter = new IntentFilter();
@@ -63,6 +71,7 @@ public class Jitsi extends Plugin {
         filter.addAction("onConferenceLeft"); // intentionally uses the obsolete onConferenceLeft in order to be consistent with iOS deployment and broadcast to JS listeners
         filter.addAction("onChatMessageReceived");
         filter.addAction("onParticipantsInfoRetrieved");
+        filter.addAction("onCustomButtonPressed");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getContext().registerReceiver(receiver, filter, RECEIVER_EXPORTED);
@@ -98,6 +107,37 @@ public class Jitsi extends Plugin {
                 .setToken(token)
                 .setSubject(subject)
                 .setUserInfo(userInfo);
+
+        if (configOverrides.has("customToolbarButtons")) {
+            try {
+                ArrayList<Bundle> buttonsList = new ArrayList<>();
+                JSONArray jsonButtons = configOverrides.getJSONArray("customToolbarButtons");
+
+                for (int i = 0; i < jsonButtons.length(); i++) {
+                    JSONObject button = jsonButtons.getJSONObject(i);
+                    Bundle bundle = new Bundle();
+                    Iterator<String> keysIt = button.keys();
+                    while (keysIt.hasNext()) {
+                        String key = keysIt.next();
+                        Object value = button.get(key);
+                        if (value instanceof Boolean) {
+                            bundle.putBoolean(key, (Boolean) value);
+                        } else if (value instanceof Integer) {
+                            bundle.putInt(key, (Integer) value);
+                        } else {
+                            bundle.putString(key, value.toString());
+                        }
+                    }
+                    buttonsList.add(bundle);
+                }
+
+                builder.setConfigOverride("customToolbarButtons", buttonsList);
+            } catch (JSONException e) {
+                Timber.tag(TAG).e(e, "❌ Failed to parse customToolbarButtons");
+            }
+        }
+
+
         if(startWithAudioMuted != null){
             builder.setAudioMuted(startWithAudioMuted);
         }
@@ -141,6 +181,10 @@ public class Jitsi extends Plugin {
             String key = keys.next();
             // Can only be bool, int or string according to
             // the overloads of setFeatureFlag.
+
+            // Чтобы не задвоить customToolbarButtons
+            if (key.equals("customToolbarButtons")) continue;
+
             if (configOverrides.get(key) != null) {
                 if (configOverrides.get(key) instanceof Boolean) {
                     builder.setConfigOverride(key, (Boolean) configOverrides.get(key));
@@ -165,6 +209,16 @@ public class Jitsi extends Plugin {
     public void leaveConference(PluginCall call) {
         Intent leaveBroadcastIntent = BroadcastIntentHelper.buildHangUpIntent();
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(leaveBroadcastIntent);
+
+        JSObject ret = new JSObject();
+        ret.put("success", true);
+        call.resolve(ret);
+    }
+
+    @PluginMethod()
+    public void enterPictureInPictureMode(PluginCall call) {
+        Intent pipIntent = new Intent("enterPiPMode");
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(pipIntent);
 
         JSObject ret = new JSObject();
         ret.put("success", true);

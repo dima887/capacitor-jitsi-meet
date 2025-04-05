@@ -103,16 +103,60 @@ public class Jitsi: CAPPlugin {
         self.jitsiMeetViewController?.delegate = self;
 
         DispatchQueue.main.async {
-            self.bridge?.viewController?.present(self.jitsiMeetViewController!, animated: true, completion: { call.resolve(["success": true ]) });
+            // New join conference
+            if let parentVC = self.bridge?.viewController,
+               let jitsiVC = self.jitsiMeetViewController {
+
+                parentVC.addChild(jitsiVC)
+                parentVC.view.addSubview(jitsiVC.view)
+                jitsiVC.view.frame = parentVC.view.bounds
+                jitsiVC.didMove(toParent: parentVC)
+
+                call.resolve(["success": true])
+            }
         }
     }
 
     @objc func leaveConference(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
-            self.jitsiMeetViewController?.leave();
-            call.resolve([
-                "success": true
-            ])
+            // 1. Jitsi SDK: отправить "hangUp"/"leave"
+            self.jitsiMeetViewController?.leave()
+
+            // 2. Удаляем из родителя
+            if let jitsiVC = self.jitsiMeetViewController {
+                jitsiVC.willMove(toParent: nil)
+                jitsiVC.view.removeFromSuperview()
+                jitsiVC.removeFromParent()
+            }
+
+            // 3. Обнулить ссылку
+            self.jitsiMeetViewController = nil
+
+            // 4. Возвращаемся
+            call.resolve(["success": true])
+        }
+    }
+
+    @objc func enterPictureInPictureMode(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            self.jitsiMeetViewController?.pipViewCoordinator?.enterPictureInPicture()
+            call.resolve(["success": true])
+        }
+    }
+
+    @objc func hideConference(_ call: CAPPluginCall) {
+        print("[Jitsi Plugin Native iOS]: JitsiMeetViewController::hideConference");
+        DispatchQueue.main.async {
+            self.jitsiMeetViewController?.view.isHidden = true
+            call.resolve(["success": true])
+        }
+    }
+
+    @objc func showConference(_ call: CAPPluginCall) {
+        print("[Jitsi Plugin Native iOS]: JitsiMeetViewController::showConference");
+        DispatchQueue.main.async {
+            self.jitsiMeetViewController?.view.isHidden = false
+            call.resolve(["success": true])
         }
     }
 }
@@ -132,5 +176,9 @@ extension Jitsi: JitsiMeetViewControllerDelegate {
 
     @objc func onParticipantsInfoRetrieved(_ dataString: String) {
         self.bridge?.triggerWindowJSEvent(eventName: "onParticipantsInfoRetrieved", data: dataString);
+    }
+
+    @objc func onCustomButtonPressed(_ dataString: String) {
+        self.bridge?.triggerWindowJSEvent(eventName: "onCustomButtonPressed", data: dataString)
     }
 }

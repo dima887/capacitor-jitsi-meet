@@ -21,5 +21,16 @@ export interface JitsiPlugin {
     }): Promise<{
         success?: boolean;
     }>;
-    leaveConference(options?: {}): Promise<{ success?: boolean; }>;
+    leaveConference(options?: {}): Promise<{
+        success?: boolean;
+    }>;
+    enterPictureInPictureMode(options?: {}): Promise<{
+        success?: boolean;
+    }>;
+    hideConference(options?: {}): Promise<{
+        success?: boolean;
+    }>;
+    showConference(options?: {}): Promise<{
+        success?: boolean;
+    }>;
 }

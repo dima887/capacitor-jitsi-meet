@@ -15,7 +15,7 @@ public class JitsiMeetViewController: UIViewController, UIGestureRecognizerDeleg
     fileprivate var jitsiMeetView: UIView?
     var options: JitsiMeetConferenceOptions? = nil
     weak var delegate: JitsiMeetViewControllerDelegate?
-    fileprivate var pipViewCoordinator: PiPViewCoordinator?
+    internal var pipViewCoordinator: PiPViewCoordinator?
 
     var webView: WKWebView? = nil;
 
@@ -77,6 +77,7 @@ protocol JitsiMeetViewControllerDelegate: AnyObject {
     func onConferenceLeft()
     func onChatMessageReceived(_ dataString: String)
     func onParticipantsInfoRetrieved(_ dataString: String)
+    func onCustomButtonPressed(_ dataString: String)
 }
 
 // MARK: JitsiMeetViewDelegate
@@ -131,5 +132,15 @@ extension JitsiMeetViewController: JitsiMeetViewDelegate {
             delegate?.onChatMessageReceived(theJSONText)
         }
     }
+
+    @objc public func customOverflowMenuButtonPressed(_ data: NSDictionary) {
+        print("[Jitsi Plugin Native iOS]: Custom button pressed")
+
+        if let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted),
+           let jsonString = String(data: jsonData, encoding: .utf8) {
+            delegate?.onCustomButtonPressed(jsonString)
+        }
+    }
+
 
 }

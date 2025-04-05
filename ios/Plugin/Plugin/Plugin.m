@@ -6,4 +6,7 @@
 CAP_PLUGIN(Jitsi, "Jitsi",
            CAP_PLUGIN_METHOD(joinConference, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(leaveConference, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(enterPictureInPictureMode, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(hideConference, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(showConference, CAPPluginReturnPromise);
 )
