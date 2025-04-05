@@ -1,6 +1,6 @@
 {
-  "name": "capacitor-jitsi-meet",
-  "version": "7.1.0-beta.0",
+  "name": "@dima887/capacitor-jitsi-meet",
+  "version": "7.1.2",
   "description": "This Ionic Capacitor plugin is created to make video calls through the free, open-sourced Jitsi video platform (https://meet.jit.si) on iOS and Android.",
   "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
@@ -13,7 +13,7 @@
     "prepublishOnly": "npm run build",
     "prettier": "prettier \"**/*.{css,html,ts,js,java}\" --plugin=prettier-plugin-java"
   },
-  "author": "Calvin Ho",
+  "author": "dima887",
   "license": "MIT",
   "dependencies": {
     "@capacitor/cli": "^7.0.0",
@@ -29,7 +29,7 @@
     "prettier": "^3.4.2",
     "prettier-plugin-java": "^2.6.6",
     "rimraf": "^6.0.1",
-    "rollup": "^4.30.1",
+    "rollup": "^4.39.0",
     "swiftlint": "^2.0.0",
     "typescript": "~4.8.4"
   },
@@ -37,13 +37,17 @@
     "dist/",
     "ios/",
     "android/",
-    "CapacitorJitsiMeet.podspec"
+    "Dima887CapacitorJitsiMeet.podspec"
   ],
   "keywords": [
     "capacitor",
     "plugin",
-    "native"
+    "native",
+    "jitsi"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "capacitor": {
     "ios": {
       "src": "ios"
@@ -56,7 +60,7 @@
   "swiftlint": "@ionic/swiftlint-config",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/calvinckho/capacitor-jitsi-meet.git"
+    "url": "git+https://github.com/dima887/capacitor-jitsi-meet.git"
   },
   "bugs": {
     "url": "https://github.com/calvinckho/capacitor-jitsi-meet/issues"
