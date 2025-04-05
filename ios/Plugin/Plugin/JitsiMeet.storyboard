@@ -11,7 +11,7 @@
         <!--Jitsi Meet View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="jitsiMeetStoryBoardID" modalTransitionStyle="crossDissolve" modalPresentationStyle="overFullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="JitsiMeetViewController" customModule="CapacitorJitsiMeet" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="jitsiMeetStoryBoardID" modalTransitionStyle="crossDissolve" modalPresentationStyle="overFullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="JitsiMeetViewController" customModule="Dima887CapacitorJitsiMeet" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
