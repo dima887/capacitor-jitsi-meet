@@ -25,80 +25,10 @@ This Capacitor plugin is created to make video calls through the free, open-sour
         current
       </td>
     </tr>
-    <tr>
-      <td>
-        v6
-      </td>
-      <td>
-        >= 6.0.0
-      </td>
-      <td>
-        until Feb 30, 2024
-      </td>
-    </tr>
-    <tr>
-      <td>
-        v5
-      </td>
-      <td>
-        <= 5.1.0
-      </td>
-      <td>
-        until April 30, 2024
-      </td>
-    </tr>
-    <tr>
-      <td>
-        v4
-      </td>
-      <td>
-        <= 3.1.0
-      </td>
-      <td>
-        until May 31, 2023
-      </td>
-    </tr>
-    <tr>
-      <td>
-        v3
-      </td>
-      <td>
-        <= 2.3.0
-      </td>
-      <td>
-        until Dec 31, 2022
-      </td>
-    </tr>
-    <tr>
-      <td>
-        v2
-      </td>
-      <td>
-        <= 1.5.14
-      </td>
-      <td>
-        until Sept 30, 2021
-      </td>
-    </tr>
-    <tr>
-      <td>
-        v1
-      </td>
-      <td>
-        <= 1.3.6
-      </td>
-      <td>
-        until June 30, 2020
-      </td>
-    </tr>
   </tbody>
 </table>
 
 Follow the [Capacitor doc to upgrade to the latest Capacitor version](https://capacitorjs.com/docs). Read the [Jitsi Meet developer doc](https://jitsi.github.io/handbook/docs/category/developer-guide) for additional information on self-hosting your own videobridge and other SDK features.
-
-## iOS Compatible Versions
-
-See the plugin [changelog](https://github.com/calvinckho/capacitor-jitsi-meet/blob/master/CHANGELOG.md) for plugin versions that are compatible to your local Xcode version.
 
 ## Embedding in web applications
 
@@ -110,13 +40,9 @@ This plugin does not currently support web implementation. We recommend using th
 
 Install from NPM (release build):
 ```
-npm install capacitor-jitsi-meet
+npm i @dima887/capacitor-jitsi-meet
 ```
-Install from Github. Make sure you insert the branch name at the end:
-```
-npm i git+ssh://git@github.com:calvinckho/capacitor-jitsi-meet#[branch name]
-```
-2. use it as a [Capacitor Plugin](https://capacitorjs.com/docs/getting-started#adding-capacitor-to-your-app). See below for Capacitor 3+ usage. For older versions of Capacitor, see [here](https://github.com/calvinckho/capacitor-jitsi-meet/blob/7321356fcae47228d250aec1e9acba3796835769/README.md).
+2. use it as a [Capacitor Plugin](https://capacitorjs.com/docs/getting-started#adding-capacitor-to-your-app).
 ```javascript
 
 import { Jitsi } from 'capacitor-jitsi-meet';
@@ -180,6 +106,63 @@ $ npm run build
 ```
 
 4. Follow the deployment instructions for [Android](android/README.md) and [iOS](ios/README.md).
+
+## New Features (Fork)
+
+### Custom Toolbar Buttons
+
+```javascript
+const result = await Jitsi.joinConference({
+    // required parameters
+    roomName: 'room1', // room identifier for the conference
+    url: 'https://meet.jit.si', // endpoint of the Jitsi Meet video bridge
+
+    // optional parameters
+    configOverrides: {
+        customToolbarButtons: [
+            {
+                icon: 'https://w7.pngwing.com/pngs/987/537/png-transparent-download-downloading-save-basic-user-interface-icon-thumbnail.png',
+                id: 'btn1',
+                text: 'Button one'
+            },
+            {
+                icon: 'https://w7.pngwing.com/pngs/987/537/png-transparent-download-downloading-save-basic-user-interface-icon-thumbnail.png',
+                id: 'btn2',
+                text: 'Button two'
+            }
+        ]
+    },
+});
+
+const handleCustomButton = async (event) => {
+    try {
+        const { id, text } = event;
+        if (id === 'btn1') {
+            console.log(id, text);
+            // do things here
+        } else if (id === 'btn2') {
+            console.log(id, text);
+            // do things here
+        }
+    } catch (e) {
+        console.error('Error parsing custom button event:', e);
+    }
+};
+
+window.addEventListener('onCustomButtonPressed', handleCustomButton);
+```
+
+### Picture-in-Picture (PiP)
+```javascript
+await Jitsi.enterPictureInPictureMode();
+```
+
+### iOS-only: hideConference() / showConference()
+You can programmatically hide/show the native Jitsi UI on iOS without ending the call:
+```javascript
+await Jitsi.hideConference();
+await Jitsi.showConference();
+```
 
 ## Official Jitsi-Meet SDK Documentation
 

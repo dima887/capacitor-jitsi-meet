@@ -60,6 +60,12 @@ end
 		<string>audio</string>
 		<string>voip</string>
 	</array>
+<key>NSMicrophoneUsageDescription</key>
+<string>This app requires access to the microphone for capturing audio.</string>
+<key>NSCameraUsageDescription</key>
+<string>This app requires access to the camera for capturing video.</string>
+<key>NSScreenRecordingUsageDescription</key>
+<string>This app requires screen recording access to share your screen during calls.</string>
 ```
 
 10. Build it in Xcode and deploy it to your device

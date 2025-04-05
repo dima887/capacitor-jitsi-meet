@@ -49,15 +49,17 @@ android {
 ```
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.mycompany.app">
++     <uses-permission android:name="android.permission.INTERNET" />
 +     <uses-permission android:name="android.permission.CAMERA" />
 +     <uses-permission android:name="android.permission.RECORD_AUDIO" />
++     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 </manifest>    
 ```
 
 9. Update android/variables.gradle file with this content
  ```gradle
  ext {
-    minSdkVersion = 23
+    minSdkVersion = 26
     compileSdkVersion = 32
     targetSdkVersion = 32
     androidxActivityVersion = '1.4.0'
