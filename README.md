@@ -47,7 +47,6 @@ npm i @dima887/capacitor-jitsi-meet
 
 import { Jitsi } from "@dima887/capacitor-jitsi-meet";
 
-```javascript
 const result = await Jitsi.joinConference({
     // required parameters
     roomName: 'room1', // room identifier for the conference
