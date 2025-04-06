@@ -45,7 +45,7 @@ npm i @dima887/capacitor-jitsi-meet
 2. use it as a [Capacitor Plugin](https://capacitorjs.com/docs/getting-started#adding-capacitor-to-your-app).
 ```javascript
 
-import { Jitsi } from 'capacitor-jitsi-meet';
+import { Jitsi } from "@dima887/capacitor-jitsi-meet";
 
 ```javascript
 const result = await Jitsi.joinConference({
