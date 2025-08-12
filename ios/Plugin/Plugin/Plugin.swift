@@ -35,6 +35,7 @@ public class Jitsi: CAPPlugin {
             builder.serverURL = URL(string: url)
             builder.room = roomName
             builder.setSubject(subject)
+            builder.setFeatureFlag("ios.screensharing.enabled", withBoolean: true)
 
             if let token = call.options["token"] as? String {
                 builder.token = token;
