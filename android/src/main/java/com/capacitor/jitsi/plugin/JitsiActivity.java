@@ -98,7 +98,7 @@ public class JitsiActivity extends JitsiMeetActivity {
                 case PARTICIPANTS_INFO_RETRIEVED:
                     on("onParticipantsInfoRetrieved", event);
                     break;
-                case CUSTOM_OVERFLOW_MENU_BUTTON_PRESSED:
+                case CUSTOM_BUTTON_PRESSED:
                     on("onCustomButtonPressed", event);
                     break;
             }
